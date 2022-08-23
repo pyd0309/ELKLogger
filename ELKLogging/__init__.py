@@ -8,11 +8,11 @@ import inspect
 import functools
 from functools import wraps
 from enum import Enum
-from Handler.FileHandler import FileStreamHandler
-from Handler.LogstashHandler import LogstashHandler
-from Handler.StreamHandler import ConsoleStreamHandler
-from Infra.Singletone import Singletone
-from Infra.SystemMetricsCatcher import SystemMetricsCatcher
+from ELKLogging.Handler.FileHandler import FileStreamHandler
+from ELKLogging.Handler.LogstashHandler import LogstashHandler
+from ELKLogging.Handler.StreamHandler import ConsoleStreamHandler
+from ELKLogging.Infra.Singletone import Singletone
+from ELKLogging.Infra.SystemMetricsCatcher import SystemMetricsCatcher
 
 
 class HANDLER(Enum):

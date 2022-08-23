@@ -1,4 +1,4 @@
-from Formatter.BaseFormatter import BaseFormatter
+from ELKLogging.Formatter.BaseFormatter import BaseFormatter
 
 
 class LogstashFormatter(BaseFormatter):

@@ -1,7 +1,7 @@
 import psutil
 import linecache
 import tracemalloc
-from Enum import enum
+from ELKLogging.Infra.Enum import enum
 
 psutil.PROCFS_PATH = "/proc"
 

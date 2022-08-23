@@ -1,4 +1,4 @@
-from Formatter.StreamFormatter import StreamFormatter
+from ELKLogging.Formatter.StreamFormatter import StreamFormatter
 from logging import StreamHandler
 
 

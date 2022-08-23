@@ -1,5 +1,5 @@
 import json
-from Formatter.BaseFormatter import BaseFormatter
+from ELKLogging.Formatter.BaseFormatter import BaseFormatter
 
 
 class StreamFormatter(BaseFormatter):
