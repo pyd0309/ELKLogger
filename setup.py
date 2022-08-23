@@ -11,7 +11,7 @@ setup.setup(
     description="Logging to Logstash/File/Stream",
     url="https://github.com/pyd0309/ELKLogger.git",
     packages=find_packages(),
-    keywords=["logging", "ELK"],
+    keywords=["logging", 'logstash', "ELK"],
     install_requires=requirements,
     python_requires=">=3.6",
 )
