@@ -1,7 +1,7 @@
 import psutil
 import linecache
 import tracemalloc
-from Infra.Enum import enum
+from Enum import enum
 
 psutil.PROCFS_PATH = "/proc"
 

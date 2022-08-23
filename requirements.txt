@@ -1,5 +1,4 @@
 charset-normalizer==2.0.12
-codepack==0.8.0
 dill==0.3.4
 idna==3.3
 parse==1.19.0

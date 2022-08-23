@@ -1,4 +1,4 @@
-from ELKLogger.ELKLogging.Formatter.LogstashFormatter import LogstashFormatter
+from Formatter.LogstashFormatter import LogstashFormatter
 from logging.handlers import SocketHandler
 
 

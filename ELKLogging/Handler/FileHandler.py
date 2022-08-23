@@ -1,4 +1,4 @@
-from ELKLogger.ELKLogging.Formatter.FileFormatter import FileFormatter
+from Formatter.FileFormatter import FileFormatter
 from logging import FileHandler
 
 

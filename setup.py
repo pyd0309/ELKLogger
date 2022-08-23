@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 with open("requirements.txt", "r") as f:
     requirements = [x.strip() for x in f.readlines()]
 
-setup.setup(
+setup(
     name="ELKLogging",
     version="0.0.1",
     author="YoungDo Park",
