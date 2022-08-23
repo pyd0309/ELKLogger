@@ -1,0 +1,33 @@
+{
+    "formatters": {
+        "basic": {
+            "format": "[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s] %(message)s"
+        }
+    },
+
+    "handlers": {
+        "file": {
+            "class": "FileStreamHandler",
+            "level": "INFO",
+            "formatter": "basic",
+            "filename": "log.txt"
+        },
+        "stream": {
+            "class": "ConsoleStreamHandler",
+            "level": "INFO",
+            "formatter": "basic"
+        },
+        "logstash": {
+            "class": "LogstashHandler",
+            "level": "INFO",
+            "ip":"10.166.212.204",
+            "port": "30148",
+            "column_list": ["service_name", "method", "line_id", "process_id", "metro_ppid", "wafer_list", "cpu_usage", "mem_usage", "running_time", "detail_message"]
+        }
+    },
+    "root": {
+        "logger_name" : "ELK_LOGGER",
+        "level": "INFO",
+        "handlers": ["file", "stream", "logstash"]
+    }
+}
