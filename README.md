@@ -28,7 +28,7 @@ __1. Create instance__
     from ELKLogging import *
 
     logger = Logger(config="logging.json")    
-    logger.set_message_data("service_name", "test_service")
+    logger.set_message_data("wafer_list", ["test"])
     ```
   
   
