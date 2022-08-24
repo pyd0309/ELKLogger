@@ -2,9 +2,9 @@
 
 ## Installation
 
-'''
+```
 pip install ELKLogging
-'''
+```
 
 ## Example
 '''
