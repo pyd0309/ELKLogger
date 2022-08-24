@@ -13,8 +13,9 @@ __1. Create instance__
   * Manual
     ```ruby
     from ELKLogging import *
-
+    
     logger = Logger(logger_name='test_logger', log_level=LOG_LEVEL.INFO)
+    logger.set_message_data("wafer_list", ["test"])
     logger.set_message_data("service_name", "test_service")
     logstash_handler = LogstashHandler(essential_key_list=['logstash_column1','logstash_column2'], host='127.0.0.1', port='8888')
                                    # Order of essential_key_list must be same as Logstash message format
@@ -42,6 +43,7 @@ __2. Send log message__
     from ELKLogging import *
 
     logger = Logger(config="logging.json")    
+    logger.set_message_data("wafer_list", ["test"])
 
     @logger.wafer_logstash
     def test_wafer_logstash():
