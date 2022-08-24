@@ -8,7 +8,7 @@ pip install ELKLogging
 
 ## Example
 
-###1. create instance
+__1. create instance__
 
   * manual create
   ```ruby
