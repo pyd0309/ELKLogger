@@ -20,6 +20,7 @@ __1. Create instance__
   logstash_handler.setLevel(LOG_LEVEL.INFO)
   logger.addHandler(logstash_handler)
   ```
+  ※ Order of essential_key_list must be same as Logstash message format
   
   * using json config file  
   json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json)
