@@ -11,7 +11,7 @@ pip install ELKLogging
 1. create instance
 
   * manual create
-  ```
+  ```ruby
   from ELKLogging import *
   
   logger = Logger(logger_name='test_logger', log_level=logging.INFO)
@@ -19,7 +19,8 @@ pip install ELKLogging
   ```
   
   * using json config file
-  ```
+   json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json)
+  ```ruby
   from ELKLogging import *
   
   logger = Logger(config="logging.json")
