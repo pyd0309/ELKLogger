@@ -36,9 +36,30 @@ __2. Send log message__
   * Decorator
     
     If you want to check your method __running time__, __cpu_usage__, __memory_usage__ then, you can use __@wafer_logstash__ decorator.
-   This decorator sends your message automatically to Logstash containing systemmetrics information. </b>
+   This decorator sends your message automatically to Logstash containing systemmetrics information. </br>
     If an error occurs you can send error_message or error_state to your method return. Then decorator set detail_message variable and send message to logstash.
+  ```ruby
+  from ELKLogging import *
+  
+  logger = Logger(config="logging.json")    
+  logger.set_message_data("service_name", "test_service")
+  
+  @logger.wafer_logstash
+  def test_wafer_logstash():
+    try:
+        [elem + elem ** 2 for elem in range(1, 10000)]
+    except Exception:
+        return logger.traceback_error()
   ```
   
-  ```
+  * Destination 
+   
+    You can select destination of log message even if your ELKLogging Object(ex.logger) has many handlers. 
+    
+    ```ruby
+    logger.info("default : send logger.message to Logstash & File & Console")
+    logger.info("send logger.message to Logstash", destination=[HANDLER.LOGSTASH])
+    logger.info("send logger.message to File & Console", destination=[HANDLER.FILE, HANDLER.STREAM])
+    logger.info("send logger.message to File", destination=[HANDLER.FILE])
+    ```
 
