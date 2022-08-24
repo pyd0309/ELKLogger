@@ -82,4 +82,11 @@ __2. Send log message__
     [2022-08-24T04:05:57.295Z] [INFO] [test_service] [test_logstash] test_logstash
     [2022-08-24T04:05:57.312Z] [ERROR] [test_service] [test_logstash] error occur test_logstash
     ```
-
+   
+    __output : Logstash(Elasticsearch)__ 
+    
+    service_name | method | log_level | wafer_list | running_time | cpu_usage | mem_usage | message
+    --- | --- | --- | --- | --- | --- | --- | --- | 
+    test_service | test_logstash | INFO | ['test'] | 0.098 | 12.7 | 3.97 | [INFO] >> service_name : test_service, method : test_logstash, line_id : 0, process_id : 0, metro_ppid : 0, wafer_list : ['test'], cpu_usage : 12.7, mem_usage : 3.97, running_time : 0.09800505638122559, detail_message : test_logstash
+    test_service | test_logstash | INFO | ['test'] | 0.098 | 12.7 | 3.97 | [ERROR] >> service_name : test_service, method : test_logstash, line_id : 0, process_id : 0, metro_ppid : 0, wafer_list : ['test'], cpu_usage : 12.7, mem_usage : 3.97, running_time : 0.09800505638122559, detail_message : Traceback (most recent call last): File "test.py", line 53, in test_logstash raise RuntimeError: No active exception to reraise
+   
