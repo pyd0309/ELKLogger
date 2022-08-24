@@ -14,7 +14,6 @@ from ELKLogging.Handler.StreamHandler import ConsoleStreamHandler
 from ELKLogging.Infra.Singletone import Singletone
 from ELKLogging.Infra.SystemMetricsCatcher import SystemMetricsCatcher
 
-
 class HANDLER(Enum):
     LOGSTASH = LogstashHandler
     STREAM = ConsoleStreamHandler
@@ -230,9 +229,9 @@ class Logger(metaclass=Singletone):
                     if 'detail_message' not in self.message_data or self.message_data['detail_message'] == '0':
                         self.set_message_data(key='detail_message', value=result)
                     raise
-                self.info(destination=[Logger.HANDLER.LOGSTASH])
+                self.info(destination=[HANDLER.LOGSTASH])
                 return result
             except Exception:
-                self.error(destination=[Logger.HANDLER.LOGSTASH])
+                self.error(destination=[HANDLER.LOGSTASH])
                 return result
         return wrapper
