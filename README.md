@@ -8,15 +8,17 @@ pip install ELKLogging
 
 ## Example
 
-__1. create instance__
-1. create instance
+__1. Create instance__
 
   * manual create
   ```ruby
   from ELKLogging import *
   
-  logger = Logger(logger_name='test_logger', log_level=logging.INFO)
+  logger = Logger(logger_name='test_logger', log_level=LOG_LEVEL.INFO)
   logger.set_message_data("service_name", "test_service")
+  logstash_handler = LogstashHandler(essential_key_list=['logstash_column1','logstash_column2'], host='127.0.0.1', port='8888')
+  logstash_handler.setLevel(LOG_LEVEL.INFO)
+  logger.addHandler(logstash_handler)
   ```
   
   * using json config file  
@@ -27,6 +29,8 @@ __1. create instance__
   logger = Logger(config="logging.json")
   logger.set_message_data("service_name", "test_service")
   ```
+  
+__2. Send log message__
   
   
 
