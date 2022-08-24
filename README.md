@@ -10,7 +10,7 @@ pip install ELKLogging
 
 __1. Create instance__
 
-  * manual create
+  * Manual
   ```ruby
   from ELKLogging import *
   
@@ -22,7 +22,7 @@ __1. Create instance__
   logger.addHandler(logstash_handler)
   ```
   
-  * using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
+  * Using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
   ```ruby
   from ELKLogging import *
   
