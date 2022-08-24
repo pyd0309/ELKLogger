@@ -36,8 +36,8 @@ __2. Send log message__
   * Decorator
     
     If you want to check your method __running time__, __cpu_usage__, __memory_usage__ then, you can use __@wafer_logstash__ decorator.
-   This decorator sends your message automatically to Logstash containing systemmetrics information. 
-    If an error occurs you can send error_message or error_state to your method return. Then decorator set detail_message variable and send message to logstash
+   This decorator sends your message automatically to Logstash containing systemmetrics information. </b>
+    If an error occurs you can send error_message or error_state to your method return. Then decorator set detail_message variable and send message to logstash.
   ```
   
   ```
