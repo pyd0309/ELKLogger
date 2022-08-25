@@ -38,7 +38,7 @@ class SystemMetricsCatcher:
         tracemalloc.start()
 
     @staticmethod
-    def tracing_mem(display=False, limit=5, level=MemLevel.MB, length=2):
+    def tracing_mem(display=False, limit=5, level=MemLevel.MB.value, length=2):
         first_size, first_peak = tracemalloc.get_traced_memory()
         peak = first_peak / pow(1024, level)
 
@@ -56,7 +56,7 @@ class SystemMetricsCatcher:
         return psutil.virtual_memory().percent
 
     @staticmethod
-    def mem_usage(level=MemLevel.GB):
+    def mem_usage(level=MemLevel.GB.value):
         total = psutil.virtual_memory().total / pow(1024, level)
         used = psutil.virtual_memory().used / pow(1024, level)
         free = psutil.virtual_memory().free / pow(1024, level)
