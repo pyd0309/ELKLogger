@@ -1,46 +1,32 @@
-import json
 import logging
 import os
+import re
 import sys
 import time
 import traceback
 import inspect
 import functools
 from functools import wraps
-from enum import Enum
 from ELKLogging.Handler.FileHandler import FileStreamHandler
 from ELKLogging.Handler.LogstashHandler import LogstashHandler
 from ELKLogging.Handler.StreamHandler import ConsoleStreamHandler
 from ELKLogging.Infra.Singletone import Singletone
 from ELKLogging.Infra.SystemMetricsCatcher import SystemMetricsCatcher
-
-class HANDLER(Enum):
-    LOGSTASH = LogstashHandler
-    STREAM = ConsoleStreamHandler
-    FILE = FileStreamHandler
-
-
-class LOG_LEVEL(Enum):
-    DEBUG = 'debug'
-    INFO = 'info'
-    WARNING = 'warning'
-    ERROR = 'error'
-    CRITICAL = 'critical'
+from ELKLogging.Infra.Enum import *
 
 
 class Logger(metaclass=Singletone):
-    def __init__(self, logger_name='ELK_LOGGER', log_level=logging.INFO, config=None):
+    def __init__(self, logger_name='ELK_LOGGER', log_level=LOG_LEVEL.INFO, config=None):
         self.end_time = dict()
         self.start_time = dict()
-        if config:
-            with open(config, "r", encoding='utf-8') as file:
-                config_data = json.load(file)
-                self.initialize_logger(config_data)
+        if type(config) == dict:
+            self.initialize_logger(config)
         else:
             self.__logger = logging.getLogger(logger_name)
             self.__logger.setLevel(log_level)
             self.__message_data = {}
             self.flush_message_data()
+            self.set_message_data('service_name', logger_name)
 
     @classmethod
     def str_to_class(cls, class_name):
@@ -62,8 +48,20 @@ class Logger(metaclass=Singletone):
                 fmt = config_data['handlers'][handler].get('formatter')
                 if fmt in config_data['formatters']:
                     fmt = config_data['formatters'][fmt]['format']
-                file_path = config_data['handlers'][handler].get('filename')
-                tmp_handler = FileStreamHandler(file_path=file_path, fmt=fmt)
+                folder_path = config_data['handlers'][handler].get('folderpath')
+                file_name = config_data['handlers'][handler].get('filename')
+                encoding = config_data['handlers'][handler].get('encoding', 'UTF-8')
+                maxBytes = config_data['handlers'][handler].get('maxBytes', '20MB')
+                backupCount = config_data['handlers'][handler].get('backupCount', 14)
+                level = [n.value for n in MemLevel if n.name in maxBytes]
+                if len(level) == 1:
+                    level = level[0]
+                else:
+                    level = 2
+                numbers = int(re.sub(r'[^0-9]', '', maxBytes))
+                maxBytes = numbers * pow(1024, level)
+                tmp_handler = FileStreamHandler(folder_path=folder_path, file_name=file_name, fmt=fmt,
+                                                encoding=encoding, maxBytes=maxBytes, backupCount=backupCount)
             elif handler_class == ConsoleStreamHandler:
                 fmt = config_data['handlers'][handler].get('formatter')
                 if fmt in config_data['formatters']:
@@ -75,6 +73,7 @@ class Logger(metaclass=Singletone):
             self.__logger.addHandler(tmp_handler)
         self.__message_data = {}
         self.flush_message_data()
+        self.set_message_data('service_name', config_data['root']['logger_name'])
 
     @property
     def logger(self):
@@ -96,9 +95,11 @@ class Logger(metaclass=Singletone):
         self.__message_data[key] = value
         return self.__message_data
 
-    def flush_message_data(self, key_list=['line_id', 'process_id', 'metro_ppid', 'detail_message', 'cpu_usage', 'mem_usage', 'running_time']):
-        for key in key_list:
-            self.set_message_data(key, '0')
+    def flush_message_data(self):
+        for handler in self.logger.handlers:
+            if type(handler) == HANDLER.LOGSTASH.value:
+                for key in handler.essential_key_list:
+                    self.set_message_data(key, '0')
 
     def add_handler(self, handler):
         self.logger.addHandler(handler)
@@ -150,7 +151,6 @@ class Logger(metaclass=Singletone):
     def info(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
         self.message_data['message'] = message
-        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.info(self.message_data)
         self.restore_handler(remove_handler)
@@ -165,7 +165,6 @@ class Logger(metaclass=Singletone):
     def warning(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
         self.message_data['message'] = message
-        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.warning(self.message_data)
         self.restore_handler(remove_handler)
@@ -173,7 +172,6 @@ class Logger(metaclass=Singletone):
     def debug(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
         self.message_data['message'] = message
-        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.debug(self.message_data)
         self.restore_handler(remove_handler)
@@ -181,7 +179,6 @@ class Logger(metaclass=Singletone):
     def critical(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
         self.message_data['message'] = message
-        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.critical(self.message_data)
         self.restore_handler(remove_handler)
@@ -226,8 +223,8 @@ class Logger(metaclass=Singletone):
                 self.set_message_data(key='running_time', value=end_time - start_time)
                 if result and type(result) == str and result.startswith("Traceback") or (
                         hasattr(result, 'status_code') and result.status_code != 200):
-                    if 'detail_message' not in self.message_data or self.message_data['detail_message'] == '0':
-                        self.set_message_data(key='detail_message', value=result)
+                    if 'message' not in self.message_data or self.message_data['message'] == '0':
+                        self.set_message_data(key='message', value=result)
                     raise
                 self.info(destination=[HANDLER.LOGSTASH])
                 return result

@@ -10,7 +10,11 @@
             "class": "FileStreamHandler",
             "level": "INFO",
             "formatter": "basic",
-            "filename": "log.txt"
+            "folderpath": "./log",
+            "filename": "log.txt",
+            "encoding": "UTF-8",
+            "maxBytes": "20MB",
+            "backupCount": 14
         },
         "stream": {
             "class": "ConsoleStreamHandler",
@@ -22,11 +26,11 @@
             "level": "INFO",
             "ip":"10.166.212.204",
             "port": "30148",
-            "column_list": ["service_name", "method", "line_id", "process_id", "metro_ppid", "wafer_list", "cpu_usage", "mem_usage", "running_time", "detail_message"]
+            "column_list": ["usergroup", "userid", "username", "service_name", "method", "line_id", "process_id", "metro_ppid", "wafer_list", "cpu_usage", "mem_usage", "running_time", "detail_message"]
         }
     },
     "root": {
-        "logger_name" : "ELK_LOGGER",
+        "logger_name" : "test_service",
         "level": "INFO",
         "handlers": ["file", "stream", "logstash"]
     }
