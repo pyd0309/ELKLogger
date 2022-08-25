@@ -1,7 +1,7 @@
 import psutil
 import linecache
 import tracemalloc
-from ELKLogging.Infra.Enum import enum
+from ELKLogging.Infra.Enum import MemLevel
 
 psutil.PROCFS_PATH = "/proc"
 
@@ -29,8 +29,6 @@ def display_top(snapshot, limit, key_type='lineno'):
 
 
 class SystemMetricsCatcher:
-    MemLevel = enum(KB=1, MB=2, GB=3)
-
     def __init__(self):
         pass
 
