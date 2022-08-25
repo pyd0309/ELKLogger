@@ -32,6 +32,22 @@ class Logger(metaclass=Singletone):
     def str_to_class(cls, class_name):
         return getattr(sys.modules[__name__], class_name)
 
+    @classmethod
+    def traceback_error(cls):
+        return traceback.format_exc()
+
+    @classmethod
+    def function_name(cls, frame, funcName):
+        if funcName in ['get', 'post'] and 'args' in frame and len(frame['args']) and hasattr(
+                frame['args'][0], 'endpoint'):
+            return frame['args'][0].endpoint
+        elif funcName in ['run'] and 'args' in frame and len(frame['args']) and type(
+                frame['args'][0]) == functools.partial:
+            tempFuncName = str(frame['args'][0].func)
+            tempFuncName = tempFuncName[tempFuncName.find('<function ') + 10:tempFuncName.find(' at 0x')]
+            return tempFuncName
+        return funcName
+
     def initialize_logger(self, config_data):
         self.__logger = logging.getLogger(config_data['root']['logger_name'])
         self.__logger.setLevel(config_data['root']['level'])
@@ -134,14 +150,8 @@ class Logger(metaclass=Singletone):
                 funcName = co.co_name
             self.message_data['sys'] = dict()
             frame = f.f_locals
-            if funcName in ['get', 'post'] and 'self' in frame and hasattr(frame['self'], 'endpoint'):
-                self.message_data['sys']['%(funcName)s'] = frame['self'].endpoint
-            elif funcName in ['run'] and 'args' in frame and len(frame['args']) and type(frame['args'][0]) == functools.partial:
-                tempFuncName = str(frame['args'][0].func)
-                tempFuncName = tempFuncName[tempFuncName.find('<function ') + 10:tempFuncName.find(' at 0x')]
-                self.message_data['sys']['%(funcName)s'] = tempFuncName
-            else:
-                self.message_data['sys']['%(funcName)s'] = funcName
+            funcName = self.function_name(frame=frame, funcName=funcName)
+            self.message_data['sys']['%(funcName)s'] = funcName
             self.message_data['sys']['%(lineno)d'] = f.f_lineno
             self.message_data['sys']['%(pathname)s'] = co.co_filename
             self.message_data['sys']['%(module)s'] = os.path.splitext(co.co_filename)[0]
@@ -183,24 +193,26 @@ class Logger(metaclass=Singletone):
         self.logger.critical(self.message_data)
         self.restore_handler(remove_handler)
 
-    def traceback_error(self):
-        return traceback.format_exc()
 
     def systemlog_tracing_start(self):
-        func_name = inspect.currentframe().f_back.f_code.co_name
-        self.start_time[func_name] = time.time()
+        frame = inspect.currentframe().f_back
+        funcName = frame.f_code.co_name
+        funcName = self.function_name(frame=frame, funcName=funcName)
+        self.start_time[funcName] = time.time()
         SystemMetricsCatcher.tracing_start()
 
     def systemlog_tracing_end(self):
-        func_name = inspect.currentframe().f_back.f_code.co_name
-        self.end_time[func_name] = time.time()
+        frame = inspect.currentframe().f_back
+        funcName = frame.f_code.co_name
+        funcName = self.function_name(frame=frame, funcName=funcName)
+        self.end_time[funcName] = time.time()
         cpu_usage, mem_usage = SystemMetricsCatcher.cpu_usage_percent(), SystemMetricsCatcher.tracing_mem()
-        running_time = self.end_time[func_name] - self.start_time[func_name]
-        self.findCaller()
-        self.set_message_data(key='method', value=func_name)
+        running_time = self.end_time[funcName] - self.start_time[funcName]
+        self.set_message_data(key='method', value=funcName)
         self.set_message_data(key='cpu_usage', value=cpu_usage)
         self.set_message_data(key='mem_usage', value=mem_usage)
         self.set_message_data(key='running_time', value=running_time)
+        self.findCaller()
 
     # decorator
     def wafer_logstash(self, func):
@@ -213,11 +225,9 @@ class Logger(metaclass=Singletone):
                 cpu_usage, mem_usage = SystemMetricsCatcher.cpu_usage_percent(), SystemMetricsCatcher.tracing_mem()
                 end_time = time.time()
                 frame = sys._getframe().f_locals
-                if func.__name__ in ['get', 'post'] and 'args' in frame and len(frame['args']) and hasattr(
-                        frame['args'][0], 'endpoint'):
-                    self.set_message_data(key='method', value=frame['args'][0].endpoint)
-                else:
-                    self.set_message_data(key='method', value=func.__name__)
+                funcName = func.__name__
+                funcName = self.function_name(frame=frame, funcName=funcName)
+                self.set_message_data(key='method', value=funcName)
                 self.set_message_data(key='cpu_usage', value=cpu_usage)
                 self.set_message_data(key='mem_usage', value=mem_usage)
                 self.set_message_data(key='running_time', value=end_time - start_time)
