@@ -20,7 +20,7 @@ __1. Create instance__
     logstash_handler = LogstashHandler(essential_key_list=['logstash_column1','logstash_column2'], host='127.0.0.1', port='8888')
                                    # Order of essential_key_list must be same as Logstash message format
     logstash_handler.setLevel(LOG_LEVEL.INFO)
-    logger.addHandler(logstash_handler)
+    logger.add_handler(logstash_handler)
     ```
   
   * Using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
