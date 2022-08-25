@@ -44,7 +44,9 @@ __2. Send log message__
     ```ruby
     from ELKLogging import *
 
-    logger = Logger(config="logging.json")    
+    with open("logging.json", "r", encoding='utf-8') as file:
+        config_data = json.load(file)
+    logger = Logger(config=config_data)
     logger.set_message_data("wafer_list", ["test"])
 
     @logger.wafer_logstash
