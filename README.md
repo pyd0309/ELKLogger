@@ -93,8 +93,11 @@ __2. Send log message__
            logger.info("test_logstash") # Send to all Handler 
            raise
        except Exception:
-           logger.set_message_data(key='detail_message', value=logger.traceback_error()) # If you "return logger.traceback_error()", don't have to set detail_message 
-           logger.error("error occur test_logstash") # Send to all Handler 
+           logger.error(message=logger.traceback_error(), destination=[HANDLER.LOGSTASH])
+           logger.error(message="error occur test_logstash", destination=[HANDLER.FILE, HANDLER.STREAM])
+           
+           #if all the handlers recive same message, then you can change code below
+           #logger.error("error occur test_logstash")
     ```
 
     
