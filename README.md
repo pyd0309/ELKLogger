@@ -24,9 +24,12 @@ __1. Create instance__
   
   * Using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
     ```ruby
+    import json
     from ELKLogging import *
 
-    logger = Logger(config="logging.json")    
+    with open("logging.json", "r", encoding='utf-8') as file:
+        config_data = json.load(file)
+    logger = Logger(config=config_data)
     logger.set_message_data("wafer_list", ["test"])
     ```
   
