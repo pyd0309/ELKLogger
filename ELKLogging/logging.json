@@ -4,12 +4,7 @@
             "format": "[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s] %(message)s"
         }
     },
-<<<<<<< HEAD
     "handlers":
-=======
-
-    "handlers": 
->>>>>>> 4ac141c956a2c97b8307086c518ce93e34aa7caf
     {
         "file": {
             "class": "FileStreamHandler",
