@@ -16,10 +16,25 @@ __1. Create instance__
     
     logger = Logger(logger_name='test_logger', log_level=LOG_LEVEL.INFO)
     logger.set_message_data("wafer_list", ["test"])
+    
+    #logstash
     logstash_handler = LogstashHandler(essential_key_list=['logstash_column1','logstash_column2'], host='127.0.0.1', port='8888')
                                    # Order of essential_key_list must be same as Logstash message format
     logstash_handler.setLevel(LOG_LEVEL.INFO)
     logger.add_handler(logstash_handler)
+    
+    #file
+    fmt = "[%(asctime)s] [%(levelname)s] [%(name)s] [%(funcName)s] %(message)s"
+    file_handler = FileStreamHandler(folder_path='./folder1/folder2', file_name="mp_log.txt", encoding='UTF-8',
+                                 maxBytes=20 * 1024 * 1024, backupCount=14, fmt=fmt)
+    file_handler.setLevel(LOG_LEVEL.INFO)
+    logger.add_handler(file_handler)
+  
+    #stream
+    fmt = "[%(asctime)s] [%(levelname)s] [%(name)s] %(message)s"
+    stream_handler = ConsoleStreamHandler(fmt=fmt)
+    stream_handler.setLevel(LOG_LEVEL.INFO)
+    logger.add_handler(stream_handler)
     ```
   
   * Using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
