@@ -38,11 +38,10 @@ class Logger(metaclass=Singletone):
 
     @classmethod
     def function_name(cls, frame, funcName):
-        if funcName in ['get', 'post'] and 'args' in frame and len(frame['args']) and hasattr(
-                frame['args'][0], 'endpoint'):
-            return frame['args'][0].endpoint
-        elif funcName in ['run'] and 'args' in frame and len(frame['args']) and type(
-                frame['args'][0]) == functools.partial:
+        if funcName in ['get', 'post'] and 'self' in frame.f_locals and hasattr(frame.f_locals['self'], 'endpoint'):
+            return frame.f_locals['self'].endpoint
+        elif funcName in ['run'] and 'args' in frame.f_locals and len(frame.f_locals['args']) and type(
+                frame.f_locals['args'][0]) == functools.partial:
             tempFuncName = str(frame['args'][0].func)
             tempFuncName = tempFuncName[tempFuncName.find('<function ') + 10:tempFuncName.find(' at 0x')]
             return tempFuncName
@@ -149,8 +148,9 @@ class Logger(metaclass=Singletone):
             else:
                 funcName = co.co_name
             self.message_data['sys'] = dict()
-            frame = f.f_locals
+            frame = f
             funcName = self.function_name(frame=frame, funcName=funcName)
+            self.set_message_data(key='method', value=funcName)
             self.message_data['sys']['%(funcName)s'] = funcName
             self.message_data['sys']['%(lineno)d'] = f.f_lineno
             self.message_data['sys']['%(pathname)s'] = co.co_filename
