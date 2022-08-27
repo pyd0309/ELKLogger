@@ -224,7 +224,7 @@ class Logger(metaclass=Singletone):
                 result = func(*args, **kwargs)
                 cpu_usage, mem_usage = SystemMetricsCatcher.cpu_usage_percent(), SystemMetricsCatcher.tracing_mem()
                 end_time = time.time()
-                frame = sys._getframe().f_locals
+                frame = sys._getframe()
                 funcName = func.__name__
                 funcName = self.function_name(frame=frame, funcName=funcName)
                 self.set_message_data(key='method', value=funcName)
