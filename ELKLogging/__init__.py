@@ -42,7 +42,7 @@ class Logger(metaclass=Singletone):
             return frame.f_locals['self'].endpoint
         elif funcName in ['run'] and 'args' in frame.f_locals and len(frame.f_locals['args']) and type(
                 frame.f_locals['args'][0]) == functools.partial:
-            tempFuncName = str(frame['args'][0].func)
+            tempFuncName = str(frame.f_locals['args'][0].func)
             tempFuncName = tempFuncName[tempFuncName.find('<function ') + 10:tempFuncName.find(' at 0x')]
             return tempFuncName
         return funcName
