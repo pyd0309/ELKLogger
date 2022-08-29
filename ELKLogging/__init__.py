@@ -114,7 +114,7 @@ class Logger(metaclass=Singletone):
         for handler in self.logger.handlers:
             if type(handler) == HANDLER.LOGSTASH.value:
                 for key in handler.essential_key_list:
-                    self.set_message_data(key, '0')
+                    self.set_message_data(key, '-')
 
     def add_handler(self, handler):
         self.logger.addHandler(handler)
