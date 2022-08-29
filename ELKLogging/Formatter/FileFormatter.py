@@ -10,8 +10,8 @@ class FileFormatter(BaseFormatter):
         if type(record.msg) == str:
             log_message = record.getMessage()
         elif type(record.msg) == dict:
-            if 'message' in list(record.msg.keys()):
-                log_message = record.msg['message']
+            if 'detail_message' in list(record.msg.keys()):
+                log_message = record.msg['detail_message']
                 if type(log_message) == dict:
                     log_message = json.dumps(log_message)
             else:
