@@ -160,35 +160,35 @@ class Logger(metaclass=Singletone):
 
     def info(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
-        self.message_data['message'] = message
+        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.info(self.message_data)
         self.restore_handler(remove_handler)
 
     def error(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
-        self.message_data['message'] = message
+        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.error(self.message_data)
         self.restore_handler(remove_handler)
 
     def warning(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
-        self.message_data['message'] = message
+        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.warning(self.message_data)
         self.restore_handler(remove_handler)
 
     def debug(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
-        self.message_data['message'] = message
+        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.debug(self.message_data)
         self.restore_handler(remove_handler)
 
     def critical(self, message=' ', destination=[HANDLER.LOGSTASH, HANDLER.FILE, HANDLER.STREAM]):
         remove_handler = self.remove_handler([n.value for n in destination])
-        self.message_data['message'] = message
+        self.message_data['detail_message'] = message
         self.findCaller()
         self.logger.critical(self.message_data)
         self.restore_handler(remove_handler)
@@ -233,8 +233,8 @@ class Logger(metaclass=Singletone):
                 self.set_message_data(key='running_time', value=end_time - start_time)
                 if result and type(result) == str and result.startswith("Traceback") or (
                         hasattr(result, 'status_code') and result.status_code != 200):
-                    if 'message' not in self.message_data or self.message_data['message'] == '0':
-                        self.set_message_data(key='message', value=result)
+                    if 'detail_message' not in self.message_data or self.message_data['detail_message'] == '0':
+                        self.set_message_data(key='detail_message', value=result)
                     raise
                 self.info(destination=[HANDLER.LOGSTASH])
                 return result
