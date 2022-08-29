@@ -207,7 +207,7 @@ class Logger(metaclass=Singletone):
         funcName = self.function_name(frame=frame, funcName=funcName)
         self.end_time[funcName] = time.time()
         cpu_usage, mem_usage = SystemMetricsCatcher.cpu_usage_percent(), SystemMetricsCatcher.tracing_mem()
-        running_time = self.end_time[funcName] - self.start_time[funcName]
+        running_time = round(self.end_time[funcName] - self.start_time[funcName],3)
         self.set_message_data(key='method', value=funcName)
         self.set_message_data(key='cpu_usage', value=cpu_usage)
         self.set_message_data(key='mem_usage', value=mem_usage)
@@ -230,7 +230,7 @@ class Logger(metaclass=Singletone):
                 self.set_message_data(key='method', value=funcName)
                 self.set_message_data(key='cpu_usage', value=cpu_usage)
                 self.set_message_data(key='mem_usage', value=mem_usage)
-                self.set_message_data(key='running_time', value=end_time - start_time)
+                self.set_message_data(key='running_time', value=round(end_time - start_time,3))
                 if result and type(result) == str and result.startswith("Traceback") or (
                         hasattr(result, 'status_code') and result.status_code != 200):
                     if 'detail_message' not in self.message_data or self.message_data['detail_message'] == '0':
