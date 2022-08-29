@@ -231,10 +231,7 @@ class Logger(metaclass=Singletone):
                 self.set_message_data(key='cpu_usage', value=cpu_usage)
                 self.set_message_data(key='mem_usage', value=mem_usage)
                 self.set_message_data(key='running_time', value=round(end_time - start_time,3))
-                if result and type(result) == str and result.startswith("Traceback") or (
-                        hasattr(result, 'status_code') and result.status_code != 200):
-                    if 'detail_message' not in self.message_data or self.message_data['detail_message'] == '0':
-                        self.set_message_data(key='detail_message', value=result)
+                if result and type(result) == str and result.startswith("Traceback") or (hasattr(result, 'status_code') and result.status_code != 200):
                     raise
                 self.info(destination=[HANDLER.LOGSTASH])
                 return result
