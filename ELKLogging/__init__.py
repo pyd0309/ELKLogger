@@ -219,6 +219,7 @@ class Logger(metaclass=Singletone):
         @wraps(func)
         def wrapper(*args, **kwargs):
             try:
+                isresult = False
                 start_time = time.time()
                 SystemMetricsCatcher.tracing_start()
                 result = func(*args, **kwargs)
@@ -232,10 +233,14 @@ class Logger(metaclass=Singletone):
                 self.set_message_data(key='mem_usage', value=mem_usage)
                 self.set_message_data(key='running_time', value=round(end_time - start_time,3))
                 if result and (type(result) == str and result.startswith("Traceback")) or (hasattr(result, 'status_code') and result.status_code != 200):
+                    isresult = True
                     raise
                 self.info(destination=[HANDLER.LOGSTASH])
                 return result
             except Exception:
-                self.error(destination=[HANDLER.LOGSTASH])
+                if isresult:
+                    self.error(message=result, destination=[HANDLER.LOGSTASH])
+                else:
+                    self.error(destination=[HANDLER.LOGSTASH])
                 return result
         return wrapper
