@@ -26,7 +26,7 @@
             "level": "INFO",
             "ip":"10.166.212.204",
             "port": "30148",
-            "column_list": ["service_name", "method", "usergroup", "userid", "username", "line_id", "process_id", "metro_ppid", "wafer_list", "cpu_usage", "mem_usage", "running_time", "message"]
+            "column_list": ["service_name", "method", "usergroup", "userid", "username", "line_id", "process_id", "metro_ppid", "wafer_list", "cpu_usage", "mem_usage", "running_time", "detail_message"]
         }
     },
     "root": {
