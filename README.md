@@ -47,6 +47,17 @@ __1. Create instance__
     logger = Logger(config=config_data)
     logger.set_message_data("wafer_list", ["test"])
     ```
+    
+  * config file path in parent directory
+    ```ruby
+    from pathlib import Path
+    import json
+
+    log_dir = os.path.join(Path(os.path.dirname(__file__)).parent, 'logging.json')
+    with open(log_dir, "r", encoding='utf-8') as file:
+        config_data = json.load(file)
+
+    ```
   
   
 __2. Send log message__
