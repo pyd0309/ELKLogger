@@ -39,6 +39,8 @@ __1. Create instance__
   
   * Using json config file  (json example : [logging.json](https://github.com/pyd0309/ELKLogging/blob/master/ELKLogging/logging.json))
     ```ruby
+    #main.py
+    
     import json
     from ELKLogging import *
 
@@ -46,6 +48,13 @@ __1. Create instance__
         config_data = json.load(file)
     logger = Logger(config=config_data)
     logger.set_message_data("wafer_list", ["test"])
+    
+    #test.py (useless to create object -> use Logger() because it is created by singletone pattern)
+    
+    from ELKLogging import *
+
+    def test_method():
+        Logger().info("test_method")
     ```
     
   * config file path in parent directory
