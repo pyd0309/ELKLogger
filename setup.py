@@ -5,7 +5,7 @@ with open("requirements.txt", "r") as f:
 
 setup(
     name="ELKLogging",
-    version="0.1.3",
+    version="0.1.4",
     author="YoungDo Park",
     author_email="pyd0309@gmail.com",
     description="Logging to Logstash/File/Stream",
